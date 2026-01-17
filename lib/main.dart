@@ -26,13 +26,7 @@ class Application extends StatelessWidget {
           darkTheme: materialTheme.dark(),
           themeMode: themeMode,
           debugShowCheckedModeBanner: false,
-          builder: (context, child) {
-            // 在这里全局添加 SafeArea
-            Widget widget = SafeArea(child: child!);
-            // 同时保留 BotToast 的初始化
-            widget = BotToastInit()(context, widget);
-            return widget;
-          }, //1.调用BotToastInit
+          builder: BotToastInit(), //1.调用BotToastInit
           navigatorObservers: [BotToastNavigatorObserver()], //2.注册路由观察者
         );
       },

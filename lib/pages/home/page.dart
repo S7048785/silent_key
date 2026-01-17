@@ -19,13 +19,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('SilentKey', style: TextStyle(fontSize: 24)),
       ),
-      body: IndexedStack(
-        index: _index,
-        children: [
-          PasswordPage(),
-          AddPage(),
-          SettingsPage(),
-        ],
+      body: SafeArea(
+        child: IndexedStack(
+          index: _index,
+          children: [
+            PasswordPage(),
+            AddPage(),
+            SettingsPage(),
+          ],
+        ),
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(48)),
