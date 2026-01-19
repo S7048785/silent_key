@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:silent_key/models/Account.dart';
 import 'package:silent_key/models/Category.dart';
+import 'package:silent_key/services/auth_service.dart';
 import 'dart:async';
 
 /// Hive数据库服务类
@@ -53,9 +54,7 @@ class HiveService {
   Future<void> _initializeDefaultData() async {
     if (_categoryBox.isEmpty) {
       final defaultCategories = [
-        Category(id: 1, name: '社交媒体'),
-        Category(id: 2, name: '邮箱账户'),
-        Category(id: 3, name: '购物网站'),
+        Category(id: 1, name: 'QQ'),
       ];
 
       for (final category in defaultCategories) {
@@ -127,22 +126,34 @@ class HiveService {
 
   // ==================== Account CRUD ====================
 
-  /// 添加账户
+  /// 添加账户（密码会被加密）
   Future<int> addAccount(Account account) async {
     final id = _generateAccountId(account.categoryId);
-    final newAccount = account.copyWith(id: id);
+    // 加密密码
+    final encryptedPassword = authService.encrypt(account.password) ?? account.password;
+    final newAccount = account.copyWith(id: id, password: encryptedPassword);
     await _accountBox.add(newAccount);
     return id;
   }
 
-  /// 查询指定Category下的所有Account
+  /// 查询指定Category下的所有Account（密码已解密）
   List<Account> getAccountsByCategoryId(int categoryId) {
-    return _accountBox.values.where((a) => a.categoryId == categoryId).toList().cast<Account>();
+    final accounts = _accountBox.values.where((a) => a.categoryId == categoryId).toList();
+    return _decryptAccounts(accounts);
   }
 
-  /// 获取所有账户
+  /// 获取所有账户（密码已解密）
   List<Account> getAllAccounts() {
-    return _accountBox.values.toList();
+    final accounts = _accountBox.values.toList();
+    return _decryptAccounts(accounts);
+  }
+
+  /// 解密账户列表的密码
+  List<Account> _decryptAccounts(List<Account> accounts) {
+    return accounts.map((account) {
+      final decryptedPassword = authService.decrypt(account.password) ?? account.password;
+      return account.copyWith(password: decryptedPassword);
+    }).toList();
   }
 
   /// 根据用户名查询账户
@@ -159,14 +170,16 @@ class HiveService {
     }
   }
 
-  /// 更新账户
+  /// 更新账户（密码会被加密）
   Future<bool> updateAccount(int id, Account account) async {
     try {
       final key = _accountBox.keys.firstWhere((k) {
         final acc = _accountBox.get(k);
         return acc?.id == id;
       });
-      await _accountBox.put(key, account.copyWith(id: id));
+      // 加密密码
+      final encryptedPassword = authService.encrypt(account.password) ?? account.password;
+      await _accountBox.put(key, account.copyWith(id: id, password: encryptedPassword));
       return true;
     } catch (e) {
       return false;
@@ -205,11 +218,12 @@ class HiveService {
 
   // ==================== 搜索功能 ====================
 
-  /// 根据用户名搜索
+  /// 根据用户名搜索（密码已解密）
   List<Account> searchByUsername(String keyword) {
-    return _accountBox.values
+    final accounts = _accountBox.values
         .where((a) => a.username.toLowerCase().contains(keyword.toLowerCase()))
         .toList();
+    return _decryptAccounts(accounts);
   }
 
   /// 根据分类名搜索

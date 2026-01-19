@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/pages/home/page.dart';
-import 'package:silent_key/utils/DataManager.dart';
-import 'package:silent_key/utils/ThemeManager.dart';
-import 'package:silent_key/utils/ToastUtil.dart';
-
 import 'SnakeAnimation.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,32 +13,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  /// 密码可见性控制，默认为隐藏(true)
   bool _obscurePassword = true;
   final TextEditingController _passwordController = TextEditingController();
+
+  List<int> passwordList = [-1, -1, -1, -1, -1, -1];
+  int _index = 0;
+  bool _isSetupMode = false;
+  String? _firstPassword;
+
+  final GlobalKey<SpringShakeAnimationState> _shakeKey =
+      GlobalKey<SpringShakeAnimationState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthState();
+  }
+
+  Future<void> _checkAuthState() async {
+    await authService.init();
+
+    if (!authService.hasMasterPassword()) {
+      // 首次使用，进入设置模式
+      setState(() {
+        _isSetupMode = true;
+      });
+    }
+  }
 
   void _togglePasswordVisibility() {
     setState(() {
       _obscurePassword = !_obscurePassword;
     });
   }
-
-  void _login() {
-    final password = _passwordController.text.trim();
-    print(password);
-    if (password.isEmpty) {
-      ToastUtil.showText('请输入密码', context: context);
-      return;
-    }
-    if (password == DataManager.password) {
-      Get.off(() => const HomePage());
-    } else {
-      ToastUtil.showText('密码错误', context: context);
-    }
-  }
-
-  List<int> passwordList = [-1, -1, -1, -1, -1, -1];
-  int _index = 0;
 
   void _updatePasswordList(int number) {
     setState(() {
@@ -49,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
     _index++;
 
     if (_index == 6) {
-      // 等待下一帧渲染完成后执行
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _handleLogin();
       });
@@ -74,31 +78,80 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     final password = passwordList.join('');
-    if (password.isEmpty) {
-      return;
-    }
-    if (password == DataManager.password) {
-      Get.off(() => const HomePage());
+    if (password.isEmpty) return;
+
+    if (_isSetupMode) {
+      // 设置模式
+      if (_firstPassword == null) {
+        // 第一次输入
+        if (password.length < 4) {
+          BotToast.showText(text: 'Password must be at least 4 digits');
+          _clearPasswordList();
+          return;
+        }
+        setState(() {
+          _firstPassword = password;
+        });
+        BotToast.showText(text: 'Please enter password again');
+        _clearPasswordList();
+      } else {
+        // 第二次输入确认
+        if (password == _firstPassword) {
+          _savePassword(password);
+        } else {
+          BotToast.showText(text: 'Passwords do not match');
+          _clearPasswordList();
+          setState(() {
+            _firstPassword = null;
+          });
+        }
+      }
     } else {
-      SpringShakeAnimation.shake(_shakeKey);
-      _clearPasswordList();
+      // 登录模式
+      if (authService.login(password)) {
+        BotToast.showText(text: 'Welcome back!');
+        Get.offAll(() => const HomePage());
+      } else {
+        SpringShakeAnimation.shake(_shakeKey);
+        _clearPasswordList();
+      }
     }
   }
 
-  final GlobalKey<SpringShakeAnimationState> _shakeKey =
-      GlobalKey<SpringShakeAnimationState>();
+  Future<void> _savePassword(String password) async {
+    final success = await authService.setMasterPassword(password);
+    if (success) {
+      BotToast.showText(text: 'Password set successfully');
+      setState(() {
+        _isSetupMode = false;
+        _firstPassword = null;
+      });
+      Get.offAll(() => const HomePage());
+    } else {
+      BotToast.showText(text: 'Failed to set password');
+    }
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        padding: const .all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 16,
           children: [
-            const Text("Enter App Password", style: TextStyle(fontSize: 24)),
+            Text(
+              _isSetupMode ? "Set Master Password" : "Enter App Password",
+              style: const TextStyle(fontSize: 24),
+            ),
             const SizedBox(height: 12),
             SpringShakeAnimation(
               key: _shakeKey,
@@ -123,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 12),
             FractionallySizedBox(
-              widthFactor: 0.8, // 80% 宽度
+              widthFactor: 0.8,
               child: Column(
                 children: [
                   Column(
@@ -168,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () {
                           _updatePasswordList(0);
                         },
-                        child: Text('0'),
+                        child: const Text('0'),
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
@@ -177,10 +230,8 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(40),
                           ),
                         ),
-                        onPressed: () {
-                          _backspace();
-                        },
-                        child: Text(
+                        onPressed: _backspace,
+                        child: const Text(
                           'Delete',
                           style: TextStyle(
                             fontSize: 16,

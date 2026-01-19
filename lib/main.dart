@@ -6,19 +6,22 @@ import 'package:silent_key/controllers/CategoryController.dart';
 import 'package:silent_key/pages/login/page.dart';
 import 'package:silent_key/stores/hive_adapters.dart';
 import 'package:silent_key/stores/hive_service.dart';
+import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/theme/theme.dart';
 import 'package:silent_key/utils/ThemeManager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _initHive();
+  await _initServices();
   runApp(const Application());
   Get.put(CategoryController());
 }
 
-Future<void> _initHive() async {
+Future<void> _initServices() async {
   await Hive.initFlutter();
   HiveAdapters.registerAdapters();
+  // 先初始化 AuthService（需要在 HiveService 之前）
+  await authService.init();
   await hiveService.init();
 }
 
