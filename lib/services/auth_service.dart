@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:silent_key/stores/hive_service.dart';
 import 'package:silent_key/utils/crypto_util.dart';
 
 /// 认证服务 - 管理用户主密码
@@ -108,6 +109,12 @@ class AuthService extends GetxService {
     if (!verifyPassword(oldPassword)) return false;
     if (oldPassword == newPassword) {
       return true; // 密码相同，无需更改
+    }
+
+    // 先重新加密所有账号密码
+    final reencryptSuccess = await hiveService.reencryptAllPasswords(oldPassword, newPassword);
+    if (!reencryptSuccess) {
+      return false;
     }
 
     // 重新设置密码

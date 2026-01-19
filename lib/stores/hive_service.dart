@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:silent_key/models/Account.dart';
 import 'package:silent_key/models/Category.dart';
 import 'package:silent_key/services/auth_service.dart';
+import 'package:silent_key/utils/crypto_util.dart';
 import 'dart:async';
 
 /// Hive数据库服务类
@@ -231,6 +232,39 @@ class HiveService {
     return _categoryBox.values
         .where((c) => c.name.toLowerCase().contains(keyword.toLowerCase()))
         .toList();
+  }
+
+  // ==================== 重新加密功能 ====================
+
+  /// 重新加密所有账号密码（用于密码修改时）
+  /// [oldPassword] 旧密码，用于解密
+  /// [newPassword] 新密码，用于重新加密
+  Future<bool> reencryptAllPasswords(String oldPassword, String newPassword) async {
+    try {
+      // 先获取所有未解密的账号数据
+      final allAccounts = _accountBox.values.toList();
+
+      for (final account in allAccounts) {
+        // 用旧密码解密
+        final decryptedPassword = CryptoUtil.decryptStr(account.password, oldPassword);
+
+        // 如果解密成功，用新密码重新加密
+        if (decryptedPassword.isNotEmpty) {
+          final reencryptedPassword = CryptoUtil.encryptStr(decryptedPassword, newPassword);
+
+          // 找到对应的 key 并更新
+          final key = _accountBox.keys.firstWhere((k) {
+            final acc = _accountBox.get(k);
+            return acc?.id == account.id;
+          });
+
+          await _accountBox.put(key, account.copyWith(password: reencryptedPassword));
+        }
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // ==================== 关闭数据库 ====================
