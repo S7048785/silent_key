@@ -67,7 +67,7 @@ class CategoryItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    "${accounts.length}个账号",
+                    "${accounts.length} Accounts",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primaryContainer,
                       fontSize: 14,

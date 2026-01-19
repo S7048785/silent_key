@@ -145,6 +145,11 @@ class HiveService {
     return _accountBox.values.toList();
   }
 
+  /// 根据用户名查询账户
+  List<Account> getAccountsByUsername(String username) {
+    return _accountBox.values.where((a) => a.username == username).toList();
+  }
+
   /// 根据ID获取账户
   Account? getAccountById(int id) {
     try {

@@ -23,6 +23,7 @@ class AccountItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       child: ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 12),
@@ -33,7 +34,6 @@ class AccountItem extends StatelessWidget {
           onPressed: () => _copyPassword(context),
         ),
       ),
-      onTap: onTap,
     );
   }
 }

@@ -33,28 +33,28 @@ class _AddPageState extends State<AddPage> {
     final url = _urlController.text.trim();
 
     if (username.isEmpty) {
-      ToastUtil.showText('请输入用户名', context: context);
+      ToastUtil.showText('Please enter a username', context: context);
       return;
     }
 
     if (password.isEmpty) {
-      ToastUtil.showText('请输入密码', context: context);
+      ToastUtil.showText('Please enter a password', context: context);
       return;
     }
 
     if (url.isNotEmpty && !Uri.parse(url).isAbsolute) {
-      ToastUtil.showText('请输入正确的网址', context: context);
+      ToastUtil.showText('Please enter a valid URL', context: context);
       return;
     }
 
     final categoryController = Get.find<CategoryController>();
     if (categoryController.categories.isEmpty) {
-      ToastUtil.showText('请先添加分类', context: context);
+      ToastUtil.showText('Please add a category first', context: context);
       return;
     }
 
     if (_selectedCategory == null) {
-      ToastUtil.showText('请选择分类', context: context);
+      ToastUtil.showText('Please select a category', context: context);
       return;
     }
 
@@ -68,7 +68,7 @@ class _AddPageState extends State<AddPage> {
 
     await hiveService.addAccount(account);
 
-    BotToast.showText(text: '添加成功');
+    BotToast.showText(text: 'Account added successfully');
     _usernameController.clear();
     _passwordController.clear();
     _urlController.clear();
@@ -96,7 +96,7 @@ class _AddPageState extends State<AddPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('添加账户')
+        title: const Text('New Account')
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -118,7 +118,7 @@ class _AddPageState extends State<AddPage> {
                     child: DropdownButton<Category>(
                       isExpanded: true,
                       value: _selectedCategory,
-                      hint: const Text('请选择分类'),
+                      hint: const Text('Select the category'),
                       items: categoryController.categories.map((category) {
                         return DropdownMenuItem<Category>(
                           value: category,
@@ -150,7 +150,7 @@ class _AddPageState extends State<AddPage> {
             TextButton.icon(
               onPressed: () => Get.to(const AddCategoryPage()),
               icon: const Icon(Icons.add_circle_outline, size: 18),
-              label: const Text('添加分类'),
+              label: const Text('New Category'),
             ),
             const SizedBox(height: 24),
             // 表单区域
@@ -169,7 +169,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: '用户名',
+                        labelText: 'User',
                         prefixIcon: const Icon(Icons.person_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -182,7 +182,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        labelText: '密码',
+                        labelText: 'Password',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -204,7 +204,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _urlController,
                       decoration: InputDecoration(
-                        labelText: '网址 (可选)',
+                        labelText: 'URL (Optional)',
                         prefixIcon: const Icon(Icons.link_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -231,7 +231,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
                 child: const Text(
-                  '保存',
+                  'Save',
                   style: TextStyle(fontSize: 16),
                 ),
               ),

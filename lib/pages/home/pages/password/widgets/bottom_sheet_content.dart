@@ -42,19 +42,19 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   void _copyPassword(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    BotToast.showText(text: '复制成功');
+    BotToast.showText(text: 'Copied to clipboard');
   }
 
   void _confirmDelete() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认删除'),
-        content: Text('确定要删除账户 "${widget.account.username}" 吗？此操作不可撤销。'),
+        title: const Text('Confirm Delete'),
+        content: Text('Are you sure you want to delete account "${widget.account.username}"? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -62,10 +62,10 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               Get.find<CategoryController>().loadCategories();
               Get.back(); // 关闭 BottomSheet
               Navigator.pop(context); // 关闭对话框
-              BotToast.showText(text: '删除成功');
+              BotToast.showText(text: 'Deleted');
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('删除', style: TextStyle(color: Colors.white)),
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -78,11 +78,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
     final newUrl = urlController.text.trim();
 
     if (newUsername.isEmpty) {
-      BotToast.showText(text: '用户名不能为空');
+      BotToast.showText(text: 'Username cannot be empty');
       return;
     }
     if (newPassword.isEmpty) {
-      BotToast.showText(text: '密码不能为空');
+      BotToast.showText(text: 'Password cannot be empty');
       return;
     }
 
@@ -94,7 +94,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
     await hiveService.updateAccount(widget.account.id, updatedAccount);
     Get.find<CategoryController>().loadCategories();
-    BotToast.showText(text: '保存成功');
+    BotToast.showText(text: 'Saved');
     setState(() {
       isEditing = false;
     });
@@ -187,7 +187,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                     children: [
                       InfoRow(
                         icon: Icons.person_outline,
-                        label: '用户名',
+                        label: 'Username',
                         controller: usernameController,
                         enabled: isEditing,
                         theme: theme,
@@ -196,7 +196,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       const SizedBox(height: 12),
                       InfoRow(
                         icon: Icons.lock_outline,
-                        label: '密码',
+                        label: 'Password',
                         controller: passwordController,
                         enabled: isEditing,
                         obscureText: obscurePassword,
@@ -212,7 +212,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       const SizedBox(height: 12),
                       InfoRow(
                         icon: Icons.link_outlined,
-                        label: '网址',
+                        label: 'URL',
                         controller: urlController,
                         enabled: isEditing,
                         theme: theme,
@@ -241,7 +241,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   child: TextButton.icon(
                     onPressed: _confirmDelete,
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    label: const Text('删除', style: TextStyle(color: Colors.red)),
+                    label: const Text('Delete', style: TextStyle(color: Colors.red)),
                   ),
                 ),
                 const SizedBox(height: 16),

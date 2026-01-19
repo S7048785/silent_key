@@ -19,16 +19,16 @@ class _PasswordPageState extends State<PasswordPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('确认删除分类 ${category.name}？'),
-        content: const Text('此操作不可撤销'),
+        title: Text('Confirm Delete Category ${category.name}?'),
+        content: const Text('This action cannot be undone'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('删除'),
+            child: const Text('Delete'),
           ),
         ],
       ),
@@ -36,7 +36,7 @@ class _PasswordPageState extends State<PasswordPage> {
       if (result == true) {
         final accounts = hiveService.getAccountsByCategoryId(category.id);
         if (accounts.isNotEmpty) {
-          ToastUtil.showText('分类下有账户，无法删除', context: context);
+          ToastUtil.showText('Category ${category.name} has accounts, cannot be deleted', context: context);
           return;
         }
         Get.find<CategoryController>().deleteCategory(category);
@@ -90,7 +90,7 @@ class _PasswordPageState extends State<PasswordPage> {
         ),
         onRefresh: () async {
           Get.find<CategoryController>().loadCategories();
-          ToastUtil.showText("刷新成功", context: context);
+          ToastUtil.showText("Categories Refreshed", context: context);
         },
       ),
     );
