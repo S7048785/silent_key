@@ -9,7 +9,7 @@ class ToastUtil {
         // 生成需要显示的Widget的函数
         toastBuilder: (CancelFunc cancelFunc) => Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onSecondary,
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(

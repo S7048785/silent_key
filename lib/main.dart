@@ -1,12 +1,25 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:silent_key/controllers/CategoryController.dart';
 import 'package:silent_key/pages/login/page.dart';
+import 'package:silent_key/stores/hive_adapters.dart';
+import 'package:silent_key/stores/hive_service.dart';
 import 'package:silent_key/theme/theme.dart';
 import 'package:silent_key/utils/ThemeManager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initHive();
   runApp(const Application());
+  Get.put(CategoryController());
+}
+
+Future<void> _initHive() async {
+  await Hive.initFlutter();
+  HiveAdapters.registerAdapters();
+  await hiveService.init();
 }
 
 class Application extends StatelessWidget {

@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:silent_key/controllers/CategoryController.dart';
+import 'package:silent_key/models/Category.dart';
+import 'package:silent_key/stores/hive_service.dart';
+
+class AddCategoryPage extends StatefulWidget {
+  const AddCategoryPage({super.key});
+
+  @override
+  State<AddCategoryPage> createState() => _AddCategoryPageState();
+}
+
+class _AddCategoryPageState extends State<AddCategoryPage> {
+  final TextEditingController _nameController = TextEditingController();
+
+  Future<void> _saveCategory() async {
+    final controller = Get.find<CategoryController>();
+    final name = _nameController.text.trim();
+
+    if (name.isEmpty) {
+      BotToast.showText(text: '请输入分类名称');
+      return;
+    }
+
+    // 检查分类名是否已存在
+    final existingCategories = controller.categories;
+    if (existingCategories.any((c) => c.name.toLowerCase() == name.toLowerCase())) {
+      BotToast.showText(text: '分类名称已存在');
+      return;
+    }
+    await controller.addCategory(name);
+
+    BotToast.showText(text: '添加成功');
+    Get.back(result: true);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('添加分类'),
+        actions: [
+          TextButton(
+            onPressed: _saveCategory,
+            child: const Text('保存'),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          spacing: 16,
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: '分类名称',
+                border: OutlineInputBorder(),
+              ),
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _saveCategory(),
+            ),
+            ElevatedButton(
+              onPressed: _saveCategory,
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 50),
+              ),
+              child: const Text('保存'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
