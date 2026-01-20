@@ -28,9 +28,10 @@
 - 退出登录
 
 ## 项目截图
-| <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094941.6ui6kxf4hoc0.jpg" alt="书架"  /> | <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094937.24cxmini4c8w.jpg" alt="搜索" /> | <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094933.3nokctuthdo0.jpg" alt="历史记录" /> |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094929.53rt8w0s78s0.jpg" alt="书架"  /> | <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094921.2skc99dvu120.jpg" alt="书架"  /> | <img src="https://cdn.jsdelivr.net/gh/leetomlee123/hugoblogtalks@master/20210528/微信图片_20210528094945.303pgmllpyy0.jpg" alt="书架"  /> |                                                           |
+| <img src="./assets/img2.jpg" alt=""  /> | <img src="./assets/img2.jpg" alt="" />  | <img src="./assets/img2.jpg" alt="" /> |
+| --------------------------------------- | --------------------------------------- | -------------------------------------- |
+| <img src="./assets/img4.jpg" alt=""  /> | <img src="./assets/img5.jpg" alt=""  /> |                                        |
+
 
 
 ## 运行
