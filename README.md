@@ -4,13 +4,13 @@
 
 ## 依赖插件
 
-| 插件 | 用途 |
-|------|------|
+| 插件 | 用途      |
+|------|---------|
 | get | 状态管理、路由 |
-| bot_toast | 提示信息 |
-| hive / hive_flutter | 本地数据库 |
-| encrypt | AES 加密 |
-| shared_preferences | 偏好设置 |
+| bot_toast | 提示信息    |
+| hive / hive_flutter | 本地数据库   |
+| encrypt | AES 加密  |
+| shared_preferences | 本地数据持久化   |
 
 ## 加解密方式
 
