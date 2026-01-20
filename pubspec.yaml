@@ -39,6 +39,7 @@ dependencies:
   hive: ^2.2.3        # Hive 数据库
   hive_flutter: ^1.1.0 # Hive Flutter 集成
   encrypt: ^5.0.3
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:

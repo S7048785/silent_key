@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:silent_key/services/auth_service.dart';
@@ -13,8 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _obscurePassword = true;
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   List<int> passwordList = [-1, -1, -1, -1, -1, -1];
   int _index = 0;
@@ -28,6 +29,30 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _checkAuthState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      final logicalKey = event.logicalKey;
+      // 处理数字键 0-9
+      if (logicalKey.keyId >= 48 && logicalKey.keyId <= 57) {
+        // 主键盘数字键
+        if (_index < 6) {
+          _updatePasswordList(logicalKey.keyId - 48);
+        }
+      } else if (logicalKey.keyId >= 8589935152 && logicalKey.keyId <= 8589935161) {
+        // 小键盘数字键
+        if (_index < 6) {
+          _updatePasswordList(logicalKey.keyId - 8589935152);
+        }
+      } else if (logicalKey.keyId == 8 || logicalKey.keyId == 4294967304) {
+        // 退格键
+        _backspace();
+      }
+    }
   }
 
   Future<void> _checkAuthState() async {
@@ -41,17 +66,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
   void _updatePasswordList(int number) {
     setState(() {
       passwordList[_index] = number;
+      _index++;
     });
-    _index++;
 
     if (_index == 6) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -134,117 +153,122 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 16,
-          children: [
-            Text(
-              _isSetupMode ? "Set Master Password" : "Enter App Password",
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 12),
-            SpringShakeAnimation(
-              key: _shakeKey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 12,
-                children: [
-                  for (int i = 0; i < 6; i++)
-                    Container(
-                      height: 18,
-                      width: 18,
-                      decoration: BoxDecoration(
-                        color: passwordList[i] >= 0
-                            ? Theme.of(context).colorScheme.primary
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(color: Colors.grey, width: 1),
-                      ),
-                    ),
-                ],
+    return KeyboardListener(
+      focusNode: _focusNode,
+      onKeyEvent: _handleKeyEvent,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 16,
+            children: [
+              Text(
+                _isSetupMode ? "Set Master Password" : "Enter App Password",
+                style: const TextStyle(fontSize: 24),
               ),
-            ),
-            const SizedBox(height: 12),
-            FractionallySizedBox(
-              widthFactor: 0.8,
-              child: Column(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 20,
-                    children: [
-                      for (int i = 0; i < 3; i++)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 20,
-                          children: [
-                            for (int j = 0; j < 3; j++)
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size(78, 78),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40),
+              const SizedBox(height: 12),
+              SpringShakeAnimation(
+                key: _shakeKey,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 12,
+                  children: [
+                    for (int i = 0; i < 6; i++)
+                      Container(
+                        height: 18,
+                        width: 18,
+                        decoration: BoxDecoration(
+                          color: passwordList[i] >= 0
+                              ? Theme.of(context).colorScheme.primary
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(color: Colors.grey, width: 1),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child: Column(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 20,
+                      children: [
+                        for (int i = 0; i < 3; i++)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 20,
+                            children: [
+                              for (int j = 0; j < 3; j++)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size(78, 78),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
                                   ),
+                                  onPressed: () {
+                                    _updatePasswordList(i * 3 + j + 1);
+                                  },
+                                  child: Text('${i * 3 + j + 1}'),
                                 ),
-                                onPressed: () {
-                                  _updatePasswordList(i * 3 + j + 1);
-                                },
-                                child: Text('${i * 3 + j + 1}'),
-                              ),
-                          ],
+                            ],
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 20,
+                      children: [
+                        const SizedBox(width: 78),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(78, 78),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          onPressed: () {
+                            _updatePasswordList(0);
+                          },
+                          child: const Text('0'),
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 20,
-                    children: [
-                      const SizedBox(width: 78),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(78, 78),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(78, 78),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                          ),
+                          onPressed: _backspace,
+                          child: const Text(
+                            'Delete',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
-                        onPressed: () {
-                          _updatePasswordList(0);
-                        },
-                        child: const Text('0'),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          minimumSize: const Size(78, 78),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                        ),
-                        onPressed: _backspace,
-                        child: const Text(
-                          'Delete',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

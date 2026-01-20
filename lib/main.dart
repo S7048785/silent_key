@@ -13,6 +13,7 @@ import 'package:silent_key/utils/ThemeManager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _initServices();
+  await ThemeManager.loadThemeFromDisk();
   runApp(const Application());
   Get.put(CategoryController());
 }
