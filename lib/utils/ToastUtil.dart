@@ -6,7 +6,7 @@ class ToastUtil {
   static void showText({required String text}) {
     // 尝试通过 Get.context 获取主题，如果失败则使用默认样式
     final context = Get.context;
-    if (context != null && Theme.of(context) != null) {
+    if (context != null) {
       _showThemedToast(context, text);
     } else {
       _showFallbackToast(text);

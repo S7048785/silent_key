@@ -243,7 +243,6 @@ class HiveService {
     try {
       // 先获取所有未解密的账号数据
       final allAccounts = _accountBox.values.toList();
-      int successCount = 0;
       int failCount = 0;
 
       for (final account in allAccounts) {
@@ -266,7 +265,6 @@ class HiveService {
         });
 
         await _accountBox.put(key, account.copyWith(password: reencryptedPassword));
-        successCount++;
       }
 
       // 如果有任何失败，返回 false

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/pages/home/page.dart';
 import 'package:silent_key/utils/ToastUtil.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:silent_key/utils/ToastUtil.dart';
 
 class InfoRow extends StatelessWidget {
   final IconData icon;

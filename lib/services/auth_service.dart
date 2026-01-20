@@ -9,12 +9,6 @@ class AuthService extends GetxService {
   static const String _masterPasswordKey = 'master_password';
   static const String _passwordHintKey = 'password_hint';
 
-  // 密码验证标记（用于检测是否已登录）
-  static const String _authTokenKey = 'auth_token';
-
-  // 存储密钥用于验证密码正确性
-  static const String _verifyKey = 'verify_key';
-
   // 是否已登录
   final isLoggedIn = false.obs;
 

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:silent_key/controllers/CategoryController.dart';
-import 'package:silent_key/models/Category.dart';
-import 'package:silent_key/stores/hive_service.dart';
 import 'package:silent_key/utils/ToastUtil.dart';
 
 class AddCategoryPage extends StatefulWidget {
