@@ -5,6 +5,7 @@ import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/stores/hive_service.dart';
 import 'package:silent_key/utils/ThemeManager.dart';
 import 'package:silent_key/pages/login/page.dart';
+import 'package:silent_key/utils/ToastUtil.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -62,11 +63,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ElevatedButton(
               onPressed: () async {
                 if (firstPassword == null || firstPassword!.length < 6) {
-                  BotToast.showText(text: 'Password must be 6 digits');
+                  ToastUtil.showText(text: 'Password must be 6 digits');
                   return;
                 }
                 if (firstPassword != confirmPassword) {
-                  BotToast.showText(text: 'Passwords do not match');
+                  ToastUtil.showText(text: 'Passwords do not match');
                   return;
                 }
 
@@ -117,17 +118,18 @@ class _SettingsPageState extends State<SettingsPage> {
             ElevatedButton(
               onPressed: () async {
                 if (oldPassword == null) {
-                  BotToast.showText(text: 'Please enter your current password');
+                  ToastUtil.showText(text: 'Please enter your current password');
                   return;
                 }
 
+                // 调用服务层方法验证旧密码并更新密码
                 final success = await authService.changeMasterPassword(oldPassword!, newPassword);
                 Navigator.pop(context);
 
                 if (success) {
-                  BotToast.showText(text: 'Password changed successfully');
+                  ToastUtil.showText(text: 'Password changed successfully');
                 } else {
-                  BotToast.showText(text: 'Incorrect current password');
+                  ToastUtil.showText(text: 'Failed to change password. Some data may be corrupted.');
                 }
               },
               child: const Text('Confirm'),

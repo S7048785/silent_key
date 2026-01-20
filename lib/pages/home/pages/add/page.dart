@@ -33,28 +33,28 @@ class _AddPageState extends State<AddPage> {
     final url = _urlController.text.trim();
 
     if (username.isEmpty) {
-      ToastUtil.showText('Please enter a username', context: context);
+      ToastUtil.showText(text: 'Please enter a username');
       return;
     }
 
     if (password.isEmpty) {
-      ToastUtil.showText('Please enter a password', context: context);
+      ToastUtil.showText(text: 'Please enter a password');
       return;
     }
 
     if (url.isNotEmpty && !Uri.parse(url).isAbsolute) {
-      ToastUtil.showText('Please enter a valid URL', context: context);
+      ToastUtil.showText(text: 'Please enter a valid URL');
       return;
     }
 
     final categoryController = Get.find<CategoryController>();
     if (categoryController.categories.isEmpty) {
-      ToastUtil.showText('Please add a category first', context: context);
+      ToastUtil.showText(text: 'Please add a category first');
       return;
     }
 
     if (_selectedCategory == null) {
-      ToastUtil.showText('Please select a category', context: context);
+      ToastUtil.showText(text: 'Please select a category');
       return;
     }
 
@@ -68,7 +68,7 @@ class _AddPageState extends State<AddPage> {
 
     await hiveService.addAccount(account);
 
-    BotToast.showText(text: 'Account added successfully');
+     ToastUtil.showText(text: 'Account added successfully');
     _usernameController.clear();
     _passwordController.clear();
     _urlController.clear();

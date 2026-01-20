@@ -9,6 +9,7 @@ import 'package:silent_key/stores/hive_service.dart';
 import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/theme/theme.dart';
 import 'package:silent_key/utils/ThemeManager.dart';
+import 'package:silent_key/utils/ToastUtil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

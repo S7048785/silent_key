@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:silent_key/controllers/CategoryController.dart';
 import 'package:silent_key/models/Category.dart';
 import 'package:silent_key/stores/hive_service.dart';
+import 'package:silent_key/utils/ToastUtil.dart';
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({super.key});
@@ -20,19 +21,19 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     final name = _nameController.text.trim();
 
     if (name.isEmpty) {
-      BotToast.showText(text: '请输入分类名称');
+      ToastUtil.showText(text: '请输入分类名称');
       return;
     }
 
     // 检查分类名是否已存在
     final existingCategories = controller.categories;
     if (existingCategories.any((c) => c.name.toLowerCase() == name.toLowerCase())) {
-      BotToast.showText(text: '分类名称已存在');
+      ToastUtil.showText(text: '分类名称已存在');
       return;
     }
     await controller.addCategory(name);
 
-    BotToast.showText(text: '添加成功');
+    ToastUtil.showText(text: '添加成功');
     Get.back(result: true);
   }
 

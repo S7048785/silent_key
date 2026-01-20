@@ -69,15 +69,10 @@ class InfoRow extends StatelessWidget {
               ),
               if (!enabled && showCopy)
                 IconButton(
-                  icon: Icon(
-                    obscureText
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                    size: 18,
-                  ),
-                  onPressed: onToggleVisibility,
+                  icon: const Icon(Icons.content_copy_outlined, size: 18),
+                  onPressed: onCopy,
                 ),
-              if (enabled && onToggleVisibility != null)
+              if (onToggleVisibility != null)
                 IconButton(
                   icon: Icon(
                     obscureText

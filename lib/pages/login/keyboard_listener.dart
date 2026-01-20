@@ -18,7 +18,6 @@ class LoginKeyboardListener extends StatefulWidget {
 
 class _LoginKeyboardListenerState extends State<LoginKeyboardListener> {
   final FocusNode _focusNode = FocusNode();
-  int _index = 0;
 
   @override
   void initState() {
@@ -35,24 +34,15 @@ class _LoginKeyboardListenerState extends State<LoginKeyboardListener> {
 
     // 处理数字键 0-9 (主键盘)
     if (logicalKey.keyId >= 48 && logicalKey.keyId <= 57) {
-      _index++;
-      if (_index <= 6) {
-        widget.onNumberInput(logicalKey.keyId - 48);
-      }
+      widget.onNumberInput(logicalKey.keyId - 48);
     }
     // 处理数字键 0-9 (小键盘)
     else if (logicalKey.keyId >= 8589935152 && logicalKey.keyId <= 8589935161) {
-      _index++;
-      if (_index <= 6) {
-        widget.onNumberInput(logicalKey.keyId - 8589935152);
-      }
+      widget.onNumberInput(logicalKey.keyId - 8589935152);
     }
     // 处理退格键
     else if (logicalKey.keyId == 8 || logicalKey.keyId == 4294967304) {
-      if (_index > 0) {
-        _index--;
-        widget.onBackspace();
-      }
+      widget.onBackspace();
     }
   }
 

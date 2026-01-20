@@ -36,7 +36,7 @@ class _PasswordPageState extends State<PasswordPage> {
       if (result == true) {
         final accounts = hiveService.getAccountsByCategoryId(category.id);
         if (accounts.isNotEmpty) {
-          ToastUtil.showText('Category ${category.name} has accounts, cannot be deleted', context: context);
+          ToastUtil.showText(text: 'Category ${category.name} has accounts, cannot be deleted');
           return;
         }
         Get.find<CategoryController>().deleteCategory(category);
@@ -90,7 +90,7 @@ class _PasswordPageState extends State<PasswordPage> {
         ),
         onRefresh: () async {
           Get.find<CategoryController>().loadCategories();
-          ToastUtil.showText("Categories Refreshed", context: context);
+          ToastUtil.showText(text: 'Categories Refreshed');
         },
       ),
     );

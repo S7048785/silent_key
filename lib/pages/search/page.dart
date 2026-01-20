@@ -39,7 +39,10 @@ class _SearchPageState extends State<SearchPage> {
       isScrollControlled: true,
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.only(top: 16, bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(
+            top: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
           child: BottomSheetContent(account: account),
         );
       },
@@ -52,27 +55,32 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 16),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: ListView(
             children: [
               Row(
                 children: [
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Icon(Icons.arrow_back),
-                    ),
+                    child: Icon(Icons.arrow_back),
                   ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
                       controller: _searchController,
                       onEditingComplete: _onSearch,
                       autofocus: true,
                       decoration: InputDecoration(
-                        hoverColor: Theme.of(context).colorScheme.inversePrimary,
-                        isCollapsed: true,//重点，相当于高度包裹的意思，必须设置为true，不然有默认奇妙的最小高度
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),//内容内边距，影响高度
+                        hoverColor: Theme.of(
+                          context,
+                        ).colorScheme.inversePrimary,
+                        isCollapsed: true,
+                        //重点，相当于高度包裹的意思，必须设置为true，不然有默认奇妙的最小高度
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
+                        //内容内边距，影响高度
                         hintText: "Search Username",
                         prefixIcon: Icon(Icons.search),
                         fillColor: Theme.of(context).colorScheme.inversePrimary,
@@ -84,11 +92,12 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
                   GestureDetector(
                     onTap: _onSearch,
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: const Text("Search", style: TextStyle(fontSize: 16)),
+                    child: const Text(
+                      "Search",
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                 ],
@@ -96,14 +105,19 @@ class _SearchPageState extends State<SearchPage> {
               const SizedBox(height: 16),
               if (_searchResults.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                Text("Search Results", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(
+                  "Search Results",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 8),
-                ..._searchResults.map((a) => AccountItem(
-                  account: a,
-                  onTap: () {
-                    _showBottomSheet(a);
-                  },
-                )),
+                ..._searchResults.map(
+                  (a) => AccountItem(
+                    account: a,
+                    onTap: () {
+                      _showBottomSheet(a);
+                    },
+                  ),
+                ),
               ],
             ],
           ),

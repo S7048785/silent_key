@@ -243,23 +243,35 @@ class HiveService {
     try {
       // 先获取所有未解密的账号数据
       final allAccounts = _accountBox.values.toList();
+      int successCount = 0;
+      int failCount = 0;
 
       for (final account in allAccounts) {
         // 用旧密码解密
         final decryptedPassword = CryptoUtil.decryptStr(account.password, oldPassword);
 
-        // 如果解密成功，用新密码重新加密
-        if (decryptedPassword.isNotEmpty) {
-          final reencryptedPassword = CryptoUtil.encryptStr(decryptedPassword, newPassword);
-
-          // 找到对应的 key 并更新
-          final key = _accountBox.keys.firstWhere((k) {
-            final acc = _accountBox.get(k);
-            return acc?.id == account.id;
-          });
-
-          await _accountBox.put(key, account.copyWith(password: reencryptedPassword));
+        // 如果解密失败（返回空字符串），跳过该账号
+        if (decryptedPassword.isEmpty) {
+          failCount++;
+          continue;
         }
+
+        // 解密成功，用新密码重新加密
+        final reencryptedPassword = CryptoUtil.encryptStr(decryptedPassword, newPassword);
+
+        // 找到对应的 key 并更新
+        final key = _accountBox.keys.firstWhere((k) {
+          final acc = _accountBox.get(k);
+          return acc?.id == account.id;
+        });
+
+        await _accountBox.put(key, account.copyWith(password: reencryptedPassword));
+        successCount++;
+      }
+
+      // 如果有任何失败，返回 false
+      if (failCount > 0) {
+        return false;
       }
       return true;
     } catch (e) {

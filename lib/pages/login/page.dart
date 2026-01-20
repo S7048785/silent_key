@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/pages/home/page.dart';
+import 'package:silent_key/utils/ToastUtil.dart';
 import 'SnakeAnimation.dart';
 import 'keyboard_listener.dart';
 
@@ -79,21 +80,21 @@ class _LoginPageState extends State<LoginPage> {
       if (_firstPassword == null) {
         // 第一次输入
         if (password.length < 4) {
-          BotToast.showText(text: 'Password must be at least 4 digits');
+          ToastUtil.showText(text: 'Password must be at least 4 digits');
           _clearPasswordList();
           return;
         }
         setState(() {
           _firstPassword = password;
         });
-        BotToast.showText(text: 'Please enter password again');
+        ToastUtil.showText(text: 'Please enter password again');
         _clearPasswordList();
       } else {
         // 第二次输入确认
         if (password == _firstPassword) {
           _savePassword(password);
         } else {
-          BotToast.showText(text: 'Passwords do not match');
+          ToastUtil.showText(text: 'Passwords do not match');
           _clearPasswordList();
           setState(() {
             _firstPassword = null;
@@ -103,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       // 登录模式
       if (authService.login(password)) {
-        BotToast.showText(text: 'Welcome back!');
+        ToastUtil.showText(text: 'Welcome back!');
         Get.offAll(() => const HomePage());
       } else {
         SpringShakeAnimation.shake(_shakeKey);
@@ -115,14 +116,14 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _savePassword(String password) async {
     final success = await authService.setMasterPassword(password);
     if (success) {
-      BotToast.showText(text: 'Password set successfully');
+       ToastUtil.showText(text: 'Password set successfully');
       setState(() {
         _isSetupMode = false;
         _firstPassword = null;
       });
       Get.offAll(() => const HomePage());
     } else {
-      BotToast.showText(text: 'Failed to set password');
+      ToastUtil.showText(text: 'Failed to set password');
     }
   }
 

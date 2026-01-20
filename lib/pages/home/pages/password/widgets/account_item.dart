@@ -17,7 +17,7 @@ class AccountItem extends StatelessWidget {
 
   void _copyPassword(BuildContext context) {
     Clipboard.setData(ClipboardData(text: account.password));
-    ToastUtil.showText("复制成功", context: context);
+    ToastUtil.showText(text: '复制成功');
   }
 
   @override

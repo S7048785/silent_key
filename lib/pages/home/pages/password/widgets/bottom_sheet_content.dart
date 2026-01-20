@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:silent_key/models/Account.dart';
 import 'package:silent_key/controllers/CategoryController.dart';
 import 'package:silent_key/stores/hive_service.dart';
+import 'package:silent_key/utils/ToastUtil.dart';
 import 'info_row.dart';
 import 'action_buttons.dart';
 
@@ -42,7 +43,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   void _copyPassword(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    BotToast.showText(text: 'Copied to clipboard');
+    ToastUtil.showText(text: 'Copied to clipboard');
   }
 
   void _confirmDelete() {
@@ -50,7 +51,9 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Confirm Delete'),
-        content: Text('Are you sure you want to delete account "${widget.account.username}"? This action cannot be undone.'),
+        content: Text(
+          'Are you sure you want to delete account "${widget.account.username}"? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -62,7 +65,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               Get.find<CategoryController>().loadCategories();
               Get.back(); // 关闭 BottomSheet
               Navigator.pop(context); // 关闭对话框
-              BotToast.showText(text: 'Deleted');
+              ToastUtil.showText(text: 'Deleted');
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Delete', style: TextStyle(color: Colors.white)),
@@ -78,11 +81,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
     final newUrl = urlController.text.trim();
 
     if (newUsername.isEmpty) {
-      BotToast.showText(text: 'Username cannot be empty');
+      ToastUtil.showText(text: 'Username cannot be empty');
       return;
     }
     if (newPassword.isEmpty) {
-      BotToast.showText(text: 'Password cannot be empty');
+      ToastUtil.showText(text: 'Password cannot be empty');
       return;
     }
 
@@ -94,7 +97,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
     await hiveService.updateAccount(widget.account.id, updatedAccount);
     Get.find<CategoryController>().loadCategories();
-    BotToast.showText(text: 'Saved');
+    ToastUtil.showText(text: 'Saved');
     setState(() {
       isEditing = false;
     });
@@ -169,7 +172,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(isEditing ? Icons.close_outlined : Icons.edit_outlined),
+                        icon: Icon(
+                          isEditing
+                              ? Icons.close_outlined
+                              : Icons.edit_outlined,
+                        ),
                         onPressed: () {
                           setState(() {
                             isEditing = !isEditing;
@@ -191,6 +198,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                         controller: usernameController,
                         enabled: isEditing,
                         theme: theme,
+                        showCopy: !isEditing && widget.account.username.isNotEmpty,
                         onCopy: () => _copyPassword(widget.account.username),
                       ),
                       const SizedBox(height: 12),
@@ -206,8 +214,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                           });
                         },
                         theme: theme,
-                        showCopy: !isEditing,
-                        onCopy: () => _copyPassword(widget.account.password),
                       ),
                       const SizedBox(height: 12),
                       InfoRow(
@@ -241,7 +247,10 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   child: TextButton.icon(
                     onPressed: _confirmDelete,
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                    label: const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
