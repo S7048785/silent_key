@@ -91,7 +91,6 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
 
     return Scaffold(
       appBar: AppBar(
