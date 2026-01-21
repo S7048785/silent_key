@@ -16,15 +16,42 @@ class LoginKeyboardListener extends StatefulWidget {
   State<LoginKeyboardListener> createState() => _LoginKeyboardListenerState();
 }
 
-class _LoginKeyboardListenerState extends State<LoginKeyboardListener> {
+class _LoginKeyboardListenerState extends State<LoginKeyboardListener>
+    with WidgetsBindingObserver {
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _focusNode.requestFocus();
+      _requestFocus();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _requestFocus();
+  }
+
+  @override
+  void didUpdateWidget(LoginKeyboardListener oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _requestFocus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _requestFocus();
+    }
+  }
+
+  void _requestFocus() {
+    if (mounted) {
+      _focusNode.requestFocus();
+    }
   }
 
   void _handleKeyEvent(KeyEvent event) {
@@ -48,6 +75,7 @@ class _LoginKeyboardListenerState extends State<LoginKeyboardListener> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _focusNode.dispose();
     super.dispose();
   }
@@ -57,6 +85,7 @@ class _LoginKeyboardListenerState extends State<LoginKeyboardListener> {
     return KeyboardListener(
       focusNode: _focusNode,
       onKeyEvent: _handleKeyEvent,
+      autofocus: true,
       child: const SizedBox.shrink(),
     );
   }
