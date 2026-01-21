@@ -31,22 +31,16 @@ class Application extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 创建主题实例
-    final materialTheme = MaterialTheme(Theme.of(context).textTheme);
-
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: ThemeManager.themeMode,
-      builder: (context, themeMode, child) {
-        return GetMaterialApp(
-          home: const LoginPage(),
-          theme: materialTheme.light(),
-          darkTheme: materialTheme.dark(),
-          themeMode: themeMode,
-          debugShowCheckedModeBanner: false,
-          builder: BotToastInit(), //1.调用BotToastInit
-          navigatorObservers: [BotToastNavigatorObserver()], //2.注册路由观察者
-        );
-      },
+    return Obx(
+      () => GetMaterialApp(
+        home: const LoginPage(),
+        theme: MaterialTheme(Theme.of(context).textTheme).light(),
+        darkTheme: MaterialTheme(Theme.of(context).textTheme).dark(),
+        themeMode: ThemeManager.themeMode.value,
+        debugShowCheckedModeBanner: false,
+        builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
+      ),
     );
   }
 }
