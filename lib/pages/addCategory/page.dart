@@ -45,12 +45,6 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('添加分类'),
-        actions: [
-          TextButton(
-            onPressed: _saveCategory,
-            child: const Text('保存'),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
