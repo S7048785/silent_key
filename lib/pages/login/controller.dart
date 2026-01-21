@@ -65,45 +65,45 @@ class LoginController extends GetxController {
       if (firstPassword.value == null) {
         // 第一次输入
         if (password.length < 4) {
-          ToastUtil.showText(text: 'Password must be at least 4 digits');
+          ToastUtil.showText(text: '密码必须至少4位');
           _clearPasswordList();
           return;
         }
         firstPassword.value = password;
-        ToastUtil.showText(text: 'Please enter password again');
+        ToastUtil.showText(text: '请再次输入密码');
         _clearPasswordList();
       } else {
         // 第二次输入确认
         if (password == firstPassword.value) {
           _savePassword(password);
         } else {
-          ToastUtil.showText(text: 'Passwords do not match');
+          ToastUtil.showText(text: '两次输入密码不一致');
           _clearPasswordList();
           firstPassword.value = null;
         }
       }
     } else {
 
+      _clearPasswordList();
       if (authService.login(password)) {
-        ToastUtil.showText(text: 'Welcome back!');
+        ToastUtil.showText(text: '欢迎回来！');
         Get.offAll(() => const HomePage());
       } else {
         // 触发抖动动画
         SpringShakeAnimation.shake(shakeKey.value);
       }
-      _clearPasswordList();
     }
   }
 
   Future<void> _savePassword(String password) async {
     final success = await authService.setMasterPassword(password);
     if (success) {
-      ToastUtil.showText(text: 'Password set successfully');
+      ToastUtil.showText(text: '密码设置成功');
       isSetupMode.value = false;
       firstPassword.value = null;
       Get.offAll(() => const HomePage());
     } else {
-      ToastUtil.showText(text: 'Failed to set password');
+      ToastUtil.showText(text: '设置密码失败');
     }
   }
 }

@@ -100,7 +100,7 @@ class AuthService extends GetxService {
 
   /// 修改主密码
   Future<bool> changeMasterPassword(String oldPassword, String newPassword) async {
-    if (!verifyPassword(oldPassword)) return false;
+    if (!verifyPassword(oldPassword)) throw Exception('旧密码错误');
     if (oldPassword == newPassword) {
       return true; // 密码相同，无需更改
     }
@@ -108,7 +108,8 @@ class AuthService extends GetxService {
     // 先重新加密所有账号密码
     final reencryptSuccess = await hiveService.reencryptAllPasswords(oldPassword, newPassword);
     if (!reencryptSuccess) {
-      return false;
+      // 重新加密失败，抛出异常
+      throw Exception('重新加密密码失败');
     }
 
     // 重新设置密码

@@ -36,7 +36,7 @@ class _PasswordPageState extends State<PasswordPage> {
       if (result == true) {
         final accounts = hiveService.getAccountsByCategoryId(category.id);
         if (accounts.isNotEmpty) {
-          ToastUtil.showText(text: 'Category ${category.name} has accounts, cannot be deleted');
+          ToastUtil.showText(text: '分类 ${category.name} 下有账号，无法删除');
           return;
         }
         Get.find<CategoryController>().deleteCategory(category);

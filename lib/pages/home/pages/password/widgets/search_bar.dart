@@ -19,7 +19,7 @@ class SearchBar extends StatelessWidget {
           children: [
             Icon(Icons.search),
             const SizedBox(width: 8),
-            const Text("Search Password"),
+            const Text("搜索密码"),
           ],
         ),
       ),

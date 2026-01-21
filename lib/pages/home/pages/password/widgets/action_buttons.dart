@@ -30,7 +30,7 @@ class ActionButtons extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),
-                child: const Text('Cancel'),
+                child: const Text('取消'),
               ),
             ),
           if (isEditing)
@@ -40,7 +40,7 @@ class ActionButtons extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),
-                child: const Text('Save'),
+                child: const Text('保存'),
               ),
             ),
           if (!isEditing)
@@ -48,7 +48,7 @@ class ActionButtons extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: onCopyPassword,
                 icon: const Icon(Icons.content_copy_outlined),
-                label: const Text('Copy Password'),
+                label: const Text('复制密码'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                 ),

@@ -32,28 +32,28 @@ class _AddPageState extends State<AddPage> {
     final url = _urlController.text.trim();
 
     if (username.isEmpty) {
-      ToastUtil.showText(text: 'Please enter a username');
+      ToastUtil.showText(text: '请输入用户名');
       return;
     }
 
     if (password.isEmpty) {
-      ToastUtil.showText(text: 'Please enter a password');
+      ToastUtil.showText(text: '请输入密码');
       return;
     }
 
     if (url.isNotEmpty && !Uri.parse(url).isAbsolute) {
-      ToastUtil.showText(text: 'Please enter a valid URL');
+      ToastUtil.showText(text: '请输入有效的URL');
       return;
     }
 
     final categoryController = Get.find<CategoryController>();
     if (categoryController.categories.isEmpty) {
-      ToastUtil.showText(text: 'Please add a category first');
+      ToastUtil.showText(text: '请先添加分类');
       return;
     }
 
     if (_selectedCategory == null) {
-      ToastUtil.showText(text: 'Please select a category');
+      ToastUtil.showText(text: '请选择分类');
       return;
     }
 
@@ -67,7 +67,7 @@ class _AddPageState extends State<AddPage> {
 
     await hiveService.addAccount(account);
 
-     ToastUtil.showText(text: 'Account added successfully');
+     ToastUtil.showText(text: '已添加');
     _usernameController.clear();
     _passwordController.clear();
     _urlController.clear();
@@ -95,7 +95,7 @@ class _AddPageState extends State<AddPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Account')
+        title: const Text('添加账号')
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -117,18 +117,12 @@ class _AddPageState extends State<AddPage> {
                     child: DropdownButton<Category>(
                       isExpanded: true,
                       value: _selectedCategory,
-                      hint: const Text('Select the category'),
+                      hint: const Text('请选择分类'),
                       items: categoryController.categories.map((category) {
                         return DropdownMenuItem<Category>(
                           value: category,
                           child: Row(
                             children: [
-                              Icon(
-                                _getCategoryIcon(category.name),
-                                size: 20,
-                                color: primaryColor,
-                              ),
-                              const SizedBox(width: 12),
                               Text(category.name),
                             ],
                           ),
@@ -149,7 +143,7 @@ class _AddPageState extends State<AddPage> {
             TextButton.icon(
               onPressed: () => Get.to(const AddCategoryPage()),
               icon: const Icon(Icons.add_circle_outline, size: 18),
-              label: const Text('New Category'),
+              label: const Text('添加分类'),
             ),
             const SizedBox(height: 24),
             // 表单区域
@@ -168,7 +162,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: 'User',
+                        labelText: '用户名',
                         prefixIcon: const Icon(Icons.person_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -181,7 +175,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: '密码',
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -203,7 +197,7 @@ class _AddPageState extends State<AddPage> {
                     TextField(
                       controller: _urlController,
                       decoration: InputDecoration(
-                        labelText: 'URL (Optional)',
+                        labelText: '网址（可选）',
                         prefixIcon: const Icon(Icons.link_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -230,7 +224,7 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
                 child: const Text(
-                  'Save',
+                  '保存',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -241,17 +235,4 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  IconData _getCategoryIcon(String categoryName) {
-    final name = categoryName.toLowerCase();
-    if (name.contains('社交')) return Icons.people_outline;
-    if (name.contains('邮箱')) return Icons.email_outlined;
-    if (name.contains('购物')) return Icons.shopping_bag_outlined;
-    if (name.contains('银行') || name.contains('金融')) return Icons.account_balance_outlined;
-    if (name.contains('游戏')) return Icons.sports_esports_outlined;
-    if (name.contains('工作') || name.contains('办公')) return Icons.work_outline;
-    if (name.contains('视频')) return Icons.movie_outlined;
-    if (name.contains('音乐')) return Icons.music_note_outlined;
-    if (name.contains('云')) return Icons.cloud_outlined;
-    return Icons.folder_outlined;
-  }
 }

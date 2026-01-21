@@ -42,7 +42,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   void _copyPassword(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    ToastUtil.showText(text: 'Copied to clipboard');
+    ToastUtil.showText(text: '密码已复制到剪贴板');
   }
 
   void _confirmDelete() {
@@ -64,7 +64,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               Get.find<CategoryController>().loadCategories();
               Get.back(); // 关闭 BottomSheet
               Navigator.pop(context); // 关闭对话框
-              ToastUtil.showText(text: 'Deleted');
+              ToastUtil.showText(text: '已删除');
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Delete', style: TextStyle(color: Colors.white)),
@@ -80,11 +80,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
     final newUrl = urlController.text.trim();
 
     if (newUsername.isEmpty) {
-      ToastUtil.showText(text: 'Username cannot be empty');
+      ToastUtil.showText(text: '用户名不能为空');
       return;
     }
     if (newPassword.isEmpty) {
-      ToastUtil.showText(text: 'Password cannot be empty');
+      ToastUtil.showText(text: '密码不能为空');
       return;
     }
 
@@ -96,7 +96,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
     await hiveService.updateAccount(widget.account.id, updatedAccount);
     Get.find<CategoryController>().loadCategories();
-    ToastUtil.showText(text: 'Saved');
+    ToastUtil.showText(text: '已保存');
     setState(() {
       isEditing = false;
     });
@@ -193,7 +193,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                     children: [
                       InfoRow(
                         icon: Icons.person_outline,
-                        label: 'Username',
+                        label: '用户名',
                         controller: usernameController,
                         enabled: isEditing,
                         theme: theme,
@@ -203,7 +203,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       const SizedBox(height: 12),
                       InfoRow(
                         icon: Icons.lock_outline,
-                        label: 'Password',
+                        label: '密码',
                         controller: passwordController,
                         enabled: isEditing,
                         obscureText: obscurePassword,
@@ -247,7 +247,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                     onPressed: _confirmDelete,
                     icon: const Icon(Icons.delete_outline, color: Colors.red),
                     label: const Text(
-                      'Delete',
+                      '删除',
                       style: TextStyle(color: Colors.red),
                     ),
                   ),

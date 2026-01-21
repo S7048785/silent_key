@@ -44,11 +44,11 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Category'),
+        title: const Text('添加分类'),
         actions: [
           TextButton(
             onPressed: _saveCategory,
-            child: const Text('Save'),
+            child: const Text('保存'),
           ),
         ],
       ),
@@ -60,7 +60,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
-                labelText: 'Category Name',
+                labelText: '分类名称',
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.done,
@@ -71,7 +71,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 50),
               ),
-              child: const Text('Save'),
+              child: const Text('保存'),
             ),
           ],
         ),

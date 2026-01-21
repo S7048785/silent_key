@@ -44,8 +44,8 @@ class LoginPage extends StatelessWidget {
       children: [
         Obx(() => Text(
               controller.isSetupMode.value
-                  ? "Set Master Password"
-                  : "Enter App Password",
+                  ? "设置主密码"
+                  : "输入应用密码",
               style: const TextStyle(fontSize: 24),
             )),
         const SizedBox(height: 12),
@@ -157,7 +157,7 @@ class LoginPage extends StatelessWidget {
       ),
       onPressed: controller.backspace,
       child: const Text(
-        'Delete',
+        '删除',
         style: TextStyle(
           fontSize: 16,
           color: Colors.red,

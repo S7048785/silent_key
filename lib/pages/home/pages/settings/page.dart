@@ -16,17 +16,17 @@ class SettingsPage extends StatelessWidget {
       context: Get.context!,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Reset Password'),
+          title: const Text('重置密码'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              const Text('Enter your new master password (4-6 digits)'),
+              const Text('输入新的主密码（6位数字）'),
               TextField(
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 decoration: const InputDecoration(
-                  labelText: 'New Password',
+                  labelText: '新密码',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 decoration: const InputDecoration(
-                  labelText: 'Confirm Password',
+                  labelText: '确认密码',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
@@ -49,22 +49,22 @@ class SettingsPage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('取消'),
             ),
             ElevatedButton(
               onPressed: () async {
                 if (firstPassword == null || firstPassword!.length < 6) {
-                  ToastUtil.showText(text: 'Password must be 6 digits');
+                  ToastUtil.showText(text: '密码必须6位');
                   return;
                 }
                 if (firstPassword != confirmPassword) {
-                  ToastUtil.showText(text: 'Passwords do not match');
+                  ToastUtil.showText(text: '两次输入密码不一致');
                   return;
                 }
                 Navigator.pop(context);
                 _showVerifyOldPasswordDialog(firstPassword!);
               },
-              child: const Text('Next'),
+              child: const Text('下一步'),
             ),
           ],
         );
@@ -79,17 +79,17 @@ class SettingsPage extends StatelessWidget {
       context: Get.context!,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Verify Current Password'),
+          title: const Text('验证当前密码'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              const Text('Enter your current master password to confirm'),
+              const Text('请输入当前主密码以确认'),
               TextField(
                 keyboardType: TextInputType.number,
                 maxLength: 6,
                 decoration: const InputDecoration(
-                  labelText: 'Current Password',
+                  labelText: '当前主密码',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
@@ -101,12 +101,12 @@ class SettingsPage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('取消'),
             ),
             ElevatedButton(
               onPressed: () async {
                 if (oldPassword == null) {
-                  ToastUtil.showText(text: 'Please enter your current password');
+                  ToastUtil.showText(text: '请输入当前主密码');
                   return;
                 }
 
@@ -114,12 +114,12 @@ class SettingsPage extends StatelessWidget {
                 Navigator.pop(context);
 
                 if (success) {
-                  ToastUtil.showText(text: 'Password changed successfully');
+                  ToastUtil.showText(text: '主密码已成功修改');
                 } else {
-                  ToastUtil.showText(text: 'Failed to change password. Some data may be corrupted.');
+                  ToastUtil.showText(text: '修改主密码失败，部分数据可能已损坏');
                 }
               },
-              child: const Text('Confirm'),
+              child: const Text('确认'),
             ),
           ],
         );
@@ -132,12 +132,12 @@ class SettingsPage extends StatelessWidget {
       context: Get.context!,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout? You will need to enter your password to login again.'),
+          title: const Text('注销登录'),
+          content: const Text('确定要注销登录吗？您需要重新输入主密码才能登录。'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: const Text('取消'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -146,7 +146,7 @@ class SettingsPage extends StatelessWidget {
                 Get.offAll(() => const LoginPage());
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Logout', style: TextStyle(color: Colors.white)),
+              child: const Text('退出登录', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -158,7 +158,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('设置'),
         centerTitle: true,
       ),
       body: ListView(
@@ -167,7 +167,7 @@ class SettingsPage extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Text(
-              'Appearance',
+              '外观',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -177,8 +177,8 @@ class SettingsPage extends StatelessWidget {
           ),
           Obx(
             () => _SettingsTile(
-              title: 'Dark Mode',
-              subtitle: 'Toggle between light and dark theme',
+              title: '深色模式',
+              subtitle: '切换浅色和深色主题',
               trailing: Switch(
                 value: ThemeManager.themeMode.value == ThemeMode.dark,
                 onChanged: (_) => ThemeManager.toggleTheme(),
@@ -189,7 +189,7 @@ class SettingsPage extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Text(
-              'Security',
+              '安全',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -198,15 +198,15 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           _SettingsTile(
-            title: 'Change Password',
-            subtitle: 'Reset your master password',
+            title: '修改主密码',
+            subtitle: '重置您的主密码',
             onTap: _showResetPasswordDialog,
           ),
           const Divider(indent: 16, endIndent: 16),
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Text(
-              'Account',
+              '账户',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -215,8 +215,8 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           _SettingsTile(
-            title: 'Logout',
-            subtitle: 'Sign out of your account',
+            title: '退出登录',
+            subtitle: '退出当前账户',
             onTap: _showLogoutDialog,
             textColor: Colors.red,
           ),

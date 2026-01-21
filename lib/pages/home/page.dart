@@ -46,12 +46,12 @@ class _HomePageState extends State<HomePage> {
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.password),
-            label: 'Password',
+            label: '密码',
           ),
-          NavigationDestination(icon: Icon(Icons.add), label: 'Add'),
+          NavigationDestination(icon: Icon(Icons.add), label: '添加'),
           NavigationDestination(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: '设置',
           ),
         ],
       )

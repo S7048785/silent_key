@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
                           vertical: 12,
                         ),
                         //内容内边距，影响高度
-                        hintText: "Search Username",
+                        hintText: "搜索用户名",
                         prefixIcon: Icon(Icons.search),
                         fillColor: Theme.of(context).colorScheme.inversePrimary,
                         filled: true,
@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
                   GestureDetector(
                     onTap: _onSearch,
                     child: const Text(
-                      "Search",
+                      "搜索",
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -106,7 +106,7 @@ class _SearchPageState extends State<SearchPage> {
               if (_searchResults.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
-                  "Search Results",
+                  "搜索结果",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
