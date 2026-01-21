@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:silent_key/services/auth_service.dart';
 import 'package:silent_key/utils/ToastUtil.dart';
 import 'package:silent_key/pages/home/page.dart';
+import 'SnakeAnimation.dart';
 
 class LoginController extends GetxController {
   // 响应式状态
   final passwordList = List<int>.filled(6, -1).obs;
   final isSetupMode = false.obs;
   final firstPassword = Rxn<String>();
-  final shakeKey = GlobalKey().obs;
+  final shakeKey = GlobalKey<SpringShakeAnimationState>().obs;
 
   int _index = 0;
 
@@ -26,6 +27,7 @@ class LoginController extends GetxController {
     }
   }
 
+  // 更新密码列表
   void updatePasswordList(int number) {
     if (_index >= 6) return;
 
@@ -39,6 +41,7 @@ class LoginController extends GetxController {
     }
   }
 
+  // 回退删除
   void backspace() {
     if (_index > 0) {
       _index--;
@@ -46,11 +49,13 @@ class LoginController extends GetxController {
     }
   }
 
+  // 清空密码列表
   void _clearPasswordList() {
     passwordList.value = List<int>.filled(6, -1);
     _index = 0;
   }
 
+  // 处理登录
   void _handleLogin() {
     final password = passwordList.join('');
     if (password.isEmpty) return;
@@ -78,17 +83,15 @@ class LoginController extends GetxController {
         }
       }
     } else {
-      // 登录模式
-      passwordList.value = List<int>.filled(6, -1);
+
       if (authService.login(password)) {
         ToastUtil.showText(text: 'Welcome back!');
         Get.offAll(() => const HomePage());
       } else {
-        // 触发震动动画
-        shakeKey.value = GlobalKey();
-        update();
-        _clearPasswordList();
+        // 触发抖动动画
+        SpringShakeAnimation.shake(shakeKey.value);
       }
+      _clearPasswordList();
     }
   }
 
