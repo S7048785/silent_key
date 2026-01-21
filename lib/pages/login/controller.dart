@@ -64,8 +64,8 @@ class LoginController extends GetxController {
       // 设置模式
       if (firstPassword.value == null) {
         // 第一次输入
-        if (password.length < 4) {
-          ToastUtil.showText(text: '密码必须至少4位');
+        if (password.length < 6) {
+          ToastUtil.showText(text: '密码必须6位');
           _clearPasswordList();
           return;
         }
@@ -84,8 +84,9 @@ class LoginController extends GetxController {
       }
     } else {
 
-      _clearPasswordList();
       if (authService.login(password)) {
+        print('Login password: ${passwordList.join('')}\n');
+
         ToastUtil.showText(text: '欢迎回来！');
         Get.offAll(() => const HomePage());
       } else {
@@ -93,6 +94,8 @@ class LoginController extends GetxController {
         SpringShakeAnimation.shake(shakeKey.value);
       }
     }
+    _clearPasswordList();
+
   }
 
   Future<void> _savePassword(String password) async {

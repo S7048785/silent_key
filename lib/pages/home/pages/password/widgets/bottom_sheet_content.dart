@@ -55,7 +55,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Get.back(),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -63,7 +63,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               await hiveService.deleteAccount(widget.account.id);
               Get.find<CategoryController>().loadCategories();
               Get.back(); // 关闭 BottomSheet
-              Navigator.pop(context); // 关闭对话框
+              Get.back(); // 关闭对话框
               ToastUtil.showText(text: '已删除');
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: const Text('取消'),
             ),
             ElevatedButton(
@@ -61,7 +61,7 @@ class SettingsPage extends StatelessWidget {
                   ToastUtil.showText(text: '两次输入密码不一致');
                   return;
                 }
-                Navigator.pop(context);
+                Get.back();
                 _showVerifyOldPasswordDialog(firstPassword!);
               },
               child: const Text('下一步'),
@@ -100,7 +100,7 @@ class SettingsPage extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: const Text('取消'),
             ),
             ElevatedButton(
@@ -110,14 +110,18 @@ class SettingsPage extends StatelessWidget {
                   return;
                 }
 
-                final success = await authService.changeMasterPassword(oldPassword!, newPassword);
-                Navigator.pop(context);
-
-                if (success) {
-                  ToastUtil.showText(text: '主密码已成功修改');
-                } else {
-                  ToastUtil.showText(text: '修改主密码失败，部分数据可能已损坏');
+                try {
+                  final success = await authService.changeMasterPassword(oldPassword!, newPassword);
+                  if (success) {
+                    ToastUtil.showText(text: '主密码已成功修改');
+                    Get.back();
+                  } else {
+                    ToastUtil.showText(text: '修改主密码失败，部分数据可能已损坏');
+                  }
+                } catch (e) {
+                  ToastUtil.showText(text: e.toString());
                 }
+
               },
               child: const Text('确认'),
             ),
@@ -132,17 +136,17 @@ class SettingsPage extends StatelessWidget {
       context: Get.context!,
       builder: (context) {
         return AlertDialog(
-          title: const Text('注销登录'),
-          content: const Text('确定要注销登录吗？您需要重新输入主密码才能登录。'),
+          title: const Text('退出登录'),
+          content: const Text('确定要退出登录吗？您需要重新输入主密码才能登录。'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Get.back(),
               child: const Text('取消'),
             ),
             ElevatedButton(
               onPressed: () {
                 authService.logout();
-                Navigator.pop(context);
+                Get.back();
                 Get.offAll(() => const LoginPage());
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
