@@ -5,20 +5,15 @@ import 'package:silent_key/utils/ThemeManager.dart';
 import 'package:silent_key/pages/login/page.dart';
 import 'package:silent_key/utils/ToastUtil.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   void _showResetPasswordDialog() {
     String? firstPassword;
     String? confirmPassword;
 
     showDialog(
-      context: context,
+      context: Get.context!,
       builder: (context) {
         return AlertDialog(
           title: const Text('Reset Password'),
@@ -35,7 +30,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  // 只保留数字
                   firstPassword = value.replaceAll(RegExp(r'[^0-9]'), '');
                 },
               ),
@@ -47,7 +41,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  // 只保留数字
                   confirmPassword = value.replaceAll(RegExp(r'[^0-9]'), '');
                 },
               ),
@@ -68,8 +61,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   ToastUtil.showText(text: 'Passwords do not match');
                   return;
                 }
-
-                // 调用验证旧密码的对话框
                 Navigator.pop(context);
                 _showVerifyOldPasswordDialog(firstPassword!);
               },
@@ -85,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
     String? oldPassword;
 
     showDialog(
-      context: context,
+      context: Get.context!,
       builder: (context) {
         return AlertDialog(
           title: const Text('Verify Current Password'),
@@ -102,7 +93,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  // 只保留数字
                   oldPassword = value.replaceAll(RegExp(r'[^0-9]'), '');
                 },
               ),
@@ -120,7 +110,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   return;
                 }
 
-                // 调用服务层方法验证旧密码并更新密码
                 final success = await authService.changeMasterPassword(oldPassword!, newPassword);
                 Navigator.pop(context);
 
@@ -140,7 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void _showLogoutDialog() {
     showDialog(
-      context: context,
+      context: Get.context!,
       builder: (context) {
         return AlertDialog(
           title: const Text('Logout'),
@@ -167,39 +156,101 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 16,
-          children: [
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-              ),
-              onPressed: () => ThemeManager.toggleTheme(),
-              child: const Text('Toggle Theme'),
-            ),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-              ),
-              onPressed: _showResetPasswordDialog,
-              child: const Text('Reset Password'),
-            ),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-                backgroundColor: Colors.red,
-                side: const BorderSide(color: Colors.red, width: 2),
-              ),
-              onPressed: _showLogoutDialog,
-              child: const Text('Logout', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
       ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(
+              'Appearance',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Obx(
+            () => _SettingsTile(
+              title: 'Dark Mode',
+              subtitle: 'Toggle between light and dark theme',
+              trailing: Switch(
+                value: ThemeManager.themeMode.value == ThemeMode.dark,
+                onChanged: (_) => ThemeManager.toggleTheme(),
+              ),
+            ),
+          ),
+          const Divider(indent: 16, endIndent: 16),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(
+              'Security',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          _SettingsTile(
+            title: 'Change Password',
+            subtitle: 'Reset your master password',
+            onTap: _showResetPasswordDialog,
+          ),
+          const Divider(indent: 16, endIndent: 16),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(
+              'Account',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          _SettingsTile(
+            title: 'Logout',
+            subtitle: 'Sign out of your account',
+            onTap: _showLogoutDialog,
+            textColor: Colors.red,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+  final Color? textColor;
+
+  const _SettingsTile({
+    required this.title,
+    this.subtitle,
+    this.trailing,
+    this.onTap,
+    this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(color: textColor),
+      ),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
+      trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
+      onTap: onTap,
     );
   }
 }
